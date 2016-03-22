@@ -1,0 +1,23 @@
+hr {
+    max-width: 200px;
+}
+header .header-content .header-content-inner h1 {
+    text-transform: none;
+}
+.navbar-default .navbar-header .navbar-brand {
+    text-transform: none;
+}
+footer .footer-above {
+    padding-top: 50px;
+    background-color: #434F5A;
+}
+footer h3 {
+    text-transform: uppercase;
+    margin-bottom: 30px;
+    color: white;
+}
+footer p {
+
+    color: #fcf8e3
+
+}
