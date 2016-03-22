@@ -4,8 +4,8 @@ from nn import NN
 from scrape_food2fork import food2fork_api, food2fork_recipe
 app = Flask(__name__)
 
-
-
+nn = NN()
+nn.build()
 
 # home page
 @app.route('/')
@@ -16,53 +16,19 @@ def index():
 
 
 
-@app.route('/submit')
-def submission_page():
-    return '''
-        <!DOCTYPE html>
-        <html>
-            <head>
-                <meta charset="utf-8">
-                <title>What Section Does Your Articles Belongs to </title>
-            </head>
-                <body>
-                    <!-- page content -->
-                    <h1>Check your articles sections!</h1>
-
-                    <form action="/recipe" method='POST' >
-                        <input type="text" name="user_input" />
-                        <input type="submit" />
-                    </form>
-                </body>
-        </html>
-
-        '''
-
-
-
 # My word counter app
 @app.route('/recipe', methods=['POST'] )
 def recipe():
-    text = str(request.form['user_input'])
+    image = str(request.form['image'])
 
-    response_recipe = unirest.get("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients?ingredients="+text+"&limitLicense=false&number=5&ranking=1",
-      headers={
-        "X-Mashape-Key": api_key,
-        "Accept": "application/json"
-      }
-    )
+    _, im = nn.preprocess_image(image)
 
-    r_id = response_recipe.body[0]['id']
+    veg = nn.predict(im)
 
-    response = unirest.get("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/"+ str(r_id) + "/information",
-      headers={
-        "X-Mashape-Key": api_key
-      }
-    )
+    recipe_list = food2fork_api(veg[0])
 
-
-
-    return response.body['sourceUrl']
+    recipe_title, image_url, ingredients = food2fork_recipe(recipe_list)
+    return render_template('index.html',veg=veg[0], recipe_title = recipe_title, image_url = image_url, ingredients = ingredients , section = "recipe")
 
 
 

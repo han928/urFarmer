@@ -15,9 +15,19 @@ footer h3 {
     text-transform: uppercase;
     margin-bottom: 30px;
     color: white;
+    font-weight: 700;
+
 }
 footer p {
 
     color: #fcf8e3
+
+}
+.input-group .form-control:first-child, .input-group-addon:first-child, .input-group-btn:first-child>.btn, .input-group-btn:first-child>.btn-group>.btn, .input-group-btn:first-child>.dropdown-toggle, .input-group-btn:last-child>.btn-group:not(:last-child)>.btn, .input-group-btn:last-child>.btn:not(:last-child):not(.dropdown-toggle) {
+    border-bottom-left-radius: 2em;
+    border-top-left-radius: 2em;
+    border-top-right-radius: 2em;
+    border-bottom-right-radius: 2em;
+    height: 40px;
 
 }
