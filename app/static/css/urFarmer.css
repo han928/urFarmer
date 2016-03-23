@@ -29,5 +29,22 @@ footer p {
     border-top-right-radius: 2em;
     border-bottom-right-radius: 2em;
     height: 40px;
+    position: relative;
+    min-width: 100px;
 
+}
+p {
+    font-family: 'Open Sans','Helvetica Neue',Arial,sans-serif;
+}
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    text-align: right;
+    opacity: 0;
+    background: 0 0;
+    cursor: inherit;
+    display: block;
 }

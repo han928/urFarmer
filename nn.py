@@ -96,4 +96,5 @@ class NN(object):
         # minus the probability to have reverse order
         cats = self.CLASSES[np.argsort(-probs)]
 
-        return np.array([result for result in zip(cats.flatten(), probs.flatten())])
+        # return np.array([result for result in zip(cats.flatten(), probs.flatten())])
+        return cats[0]

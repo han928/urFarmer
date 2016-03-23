@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+    <link rel="icon" href="../static/img/ico.png">
 
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -71,51 +72,77 @@
         <!-- /.container-fluid -->
     </nav>
         <header>
+            <section id = 'head'>
             <div class="header-content">
                 <div class="header-content-inner">
                     <h1>urFarmer</h1>
                     <hr>
                     <h3>Hmm... I wonder what is this?</h3>
-                    <form class="form-group" role="search" action="/recipe" method ='post'>
-                        <div class="input-group" style="width:750px;text-align:center;margin:0 auto;">
 
-                            <input type="text" class="form-control" placeholder="Let's find out what you have there.." aria-describedby="basic-addon2" name="image">
+
+
+                    <form class="form-group" role="search" action="/recipe" method ='post' enctype="multipart/form-data">
+                        <div class="input-group" style="text-align:center;margin:0 auto;">
+                            <!-- <input id="input-4" name=file type="file" multiple class="file-loading"> -->
+                            <br>
+
+                            <div class="col-lg-4 col-sm-6 col-12">
+                                <span class="file-input btn btn-primary btn-file">
+                                    Browse&hellip; <input type="file" multiple name=file type="file" multiple class="file-loading">
+                                </span>
+                            </div>
+
+
                             <br>
                             <p></p>
-                            <!-- <span class='input-group-btn'> -->
                                 <button "submit" class="btn btn-primary btn-xl page-scroll">Let's find out</button>
 
-                                <!-- <button type="submit" class="btn btn-md btn-default">Predict</button> -->
-                            <!-- </span> -->
                         </div>
                         <br>
                     </form>
 
                 </div>
             </div>
+        </section>
         </header>
 
     <section class="bg-primary" id="recipe">
         <div class="container">
             <div class="row">
-                <div class="col-lg-8 col-lg-offset-2 text-center">
                     {% if recipe_title %}
+                    <div class="col-lg-8 col-lg-offset-2 text-center">
 
-                    <h2 class="section-heading">It's {{ veg }}!</h2>
-                    <br>
+                    <h1 class="section-heading">It's {{ veg }}!</h2>
+                    <hr class="light">
                     <h2 class="section-heading">{{ recipe_title }}!</h2>
+                    <br>
+                    </div>
+
+
+                    <div class="col-lg-4 col-lg-offset-2 text-center">
+                    <h4 class="section-heading"></h4>
 
                     <img src= {{ image_url }} alt="Mountain View" style="width:304px;height:228px;">
+                    </div>
 
-                    <hr class="light">
+                    <div class="col-lg-4  text-center">
+                    <h4 class="section-heading">Ingredients:</h4>
                     <p class="text-faded">{{ ingredients }}</p>
+                    </div>
 
                     {% else %}
-                    <h2 class="section-heading">Result!</h2>
+                    <div class="col-lg-8 col-lg-offset-2 text-center">
+
+                    <h2 class="section-heading">Show me the veggie and I'll tell you how to cook!</h2>
                     <hr class="light">
+                    <h2 class="section-heading"></h2>
+                    </div>
+                    <!-- <img src= {{ image_url }} alt="Mountain View" style="width:304px;height:228px;"> -->
+
+                    <p class="text-faded"></p>
+
                     {% endif %}
 
-                </div>
             </div>
         </div>
     </section>
@@ -182,3 +209,18 @@
 </body>
 
 </html>
+{% if section %}
+<script>
+    $(function() {
+       $("html, body").scrollTop( $("#{{ section }}").offset().top );
+    });
+</script>
+{% endif %}
+
+
+
+<script>
+$(document).on('ready', function() {
+    $("#input-4").fileinput({showCaption: false});
+});
+</script>
