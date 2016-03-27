@@ -19,9 +19,7 @@ footer h3 {
 
 }
 footer p {
-
     color: #fcf8e3
-
 }
 .input-group .form-control:first-child, .input-group-addon:first-child, .input-group-btn:first-child>.btn, .input-group-btn:first-child>.btn-group>.btn, .input-group-btn:first-child>.dropdown-toggle, .input-group-btn:last-child>.btn-group:not(:last-child)>.btn, .input-group-btn:last-child>.btn:not(:last-child):not(.dropdown-toggle) {
     border-bottom-left-radius: 2em;
@@ -47,4 +45,7 @@ p {
     background: 0 0;
     cursor: inherit;
     display: block;
+}
+.fa-fw {
+    font-size: 40px;
 }
