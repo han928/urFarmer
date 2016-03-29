@@ -1,3 +1,4 @@
+
 # have to start environment on my pc: source activate neural_net_env
 import numpy as np
 import cPickle as pickle
@@ -8,7 +9,11 @@ from lasagne.layers import InputLayer, DenseLayer, DropoutLayer
 from lasagne.layers import MaxPool2DLayer as PoolLayer
 from lasagne.layers import LocalResponseNormalization2DLayer as NormLayer
 from lasagne.utils import floatX
-import time
+import sys, os
+
+
+
+
 
 # Without GPU
 from lasagne.layers import Conv2DLayer as ConvLayer
@@ -16,10 +21,7 @@ from lasagne.layers import Conv2DLayer as ConvLayer
 # from lasagne.layers.dnn import Conv2DDNNLayer as ConvLayer
 
 
-veg = [339, 924, 936, 937, 938, 939, 940, 941, 942, 943, 944, 945,946, 947, 948, 949, 950, 951, 952, 953, 954, 955, 957, 984, 985, 987, 988, 989, 990, 991  ]
-
-
-class NN(object):
+class NN_1(object):
     def __init__(self):
         # import pretrained weights
         self.model = pickle.load(open('vgg_cnn_s.pkl'))
@@ -46,12 +48,10 @@ class NN(object):
         net['fc6'] = DenseLayer(net['pool5'], num_units=4096)
         net['drop6'] = DropoutLayer(net['fc6'], p=0.5)
         net['fc7'] = DenseLayer(net['drop6'], num_units=4096)
-        net['drop7'] = DropoutLayer(net['fc7'], p=0.5)
-        net['fc8'] = DenseLayer(net['drop7'], num_units=1000, nonlinearity=lasagne.nonlinearities.softmax)
-        output_layer = net['fc8']
+        output_layer = net['fc7']
 
 
-        lasagne.layers.set_all_param_values(output_layer, self.model['values'])
+        lasagne.layers.set_all_param_values(output_layer, self.model['values'][:-2])
 
         self.output_layer = output_layer
 
@@ -96,11 +96,52 @@ class NN(object):
         """
         Predict outcome of a image
         """
-        t1 = time.time()
-        probs = np.array(lasagne.layers.get_output(self.output_layer, im, deterministic=True).eval())
-        # minus the probability to have reverse order
-        cats = self.CLASSES[np.argsort(-probs)]
+        out = np.array(lasagne.layers.get_output(self.output_layer, im, deterministic=True).eval())
+        return out
 
-        print time.time() - t1
-        # return np.array([result for result in zip(cats.flatten(), probs.flatten())])
-        return cats[0][:10]
+
+
+def generate_feature(folder):
+    home = '/home/ubuntu/images/'
+    # home = "/home/han/Documents/Github/urFarmer/images/"
+    try:
+        print "filepath", home+folder
+        file_list = os.listdir(home+folder)
+    except:
+        print "no such file"
+        return ""
+
+    for i, f in enumerate(file_list):
+        fname = home+folder+'/'+f
+        _, im = nn.preprocess_image(fname)
+
+        if i ==0:
+            out = nn.predict(im)
+        else:
+            out = np.r_[out, nn.predict(im)]
+
+    # print out
+    np.save(folder + '.npy', out)
+
+
+def folder_gen_feature():
+    home = '/home/ubuntu/images/'
+    # home = "/home/han/Documents/Github/urFarmer/images/"
+
+
+
+    folder_list = os.listdir(home)
+
+    for folder in folder_list:
+        try:
+            generate_feature(folder)
+        except:
+            print "something wrong with ", folder
+
+
+if __name__ == "__main__":
+    # folder = sys.argv[1]
+    nn = NN_1()
+    nn.build()
+    folder_gen_feature()
+    # generate_feature(folder)
