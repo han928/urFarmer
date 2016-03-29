@@ -102,8 +102,8 @@ class NN_1(object):
 
 
 def generate_feature(folder):
-    home = '/home/ubuntu/images/'
-    # home = "/home/han/Documents/Github/urFarmer/images/"
+    # home = '/mnt/images/'
+    home = "/home/han/Documents/Github/urFarmer/images/"
     try:
         print "filepath", home+folder
         file_list = os.listdir(home+folder)
@@ -115,18 +115,28 @@ def generate_feature(folder):
         fname = home+folder+'/'+f
         _, im = nn.preprocess_image(fname)
 
-        if i ==0:
-            out = nn.predict(im)
+        if (i ==0 or i%300==1) and i != 1:
+            input_im = im
         else:
-            out = np.r_[out, nn.predict(im)]
+            input_im = np.r_[input_im, im]
+
+        # save every 300 images to prevent overflow
+        if i % 300 == 0 and i != 0:
+            out = nn.predict(input_im)
+
+            np.save(folder+str(i)+'.npy', out)
+
+
+    out = nn.predict(input_im)
+
 
     # print out
     np.save(folder + '.npy', out)
 
 
 def folder_gen_feature():
-    home = '/home/ubuntu/images/'
-    # home = "/home/han/Documents/Github/urFarmer/images/"
+    # home = '/mnt/images/'
+    home = "/home/han/Documents/Github/urFarmer/images/"
 
 
 
@@ -143,5 +153,9 @@ if __name__ == "__main__":
     # folder = sys.argv[1]
     nn = NN_1()
     nn.build()
+    import time
+    t1 = time.time()
     folder_gen_feature()
+    t2 = time.time()
+    print "took ", t2-t1
     # generate_feature(folder)
