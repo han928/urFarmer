@@ -1,103 +1,34 @@
-import selenium.webdriver as webdriver
-import time
-import random
-import os
-from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver.common.action_chains import ActionChains
+from selenium import webdriver
+from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-# from appscript import app
-from pykeyboard import PyKeyboard
-​
-def get_users(filename):
-    '''
-    INPUT: file of users, separated by newline
-    OUTPUT: list of users
-    '''
-    with open(filename) as f:
-        users = f.readlines()
-    users = [name.split('\n')[0] for name in users if not name.startswith('#')]
-    return set(users)
-​
-​
-def get_page(user, driver, sleeptime=1, down_scrolls=int(3e2)):
-    '''
-    '''
-    url = 'http://instagram.com/' + user
-    driver.get(url)
-​
-    # Page is not available/404
-    if 'The link you followed may be broken, or the page may have been removed.' in driver.page_source:
-        return
-​
-    try:
-        driver.find_element_by_link_text('LOAD MORE').click()
-    except NoSuchElementException:
-        print "Sorry, can't click LOAD MORE for {}".format(user)
-​
-    page = driver.page_source
-​
-    for i in xrange(down_scrolls):
-        driver.execute_script('window.scrollTo(0, document.body.scrollHeight);')
-        time.sleep(sleeptime + random.random())
-        if driver.page_source == page:
-            break
-        page = driver.page_source
-​
-    saveas = ActionChains(driver).key_down(Keys.CONTROL).send_keys('s').key_up(Keys.CONTROL)
-    saveas.perform()
-​
-    time.sleep(2)
-    # app('System Events').keystroke('\r')
-    kbrd = PyKeyboard()
-    kbrd.press_key('Return')
-    time.sleep(2)
-​
-if __name__ == '__main__':
-​
-    DEBUG = False
-    SLEEPTIME = 1
-    CWD = os.getcwd()
-    USER_BUCKET = 'models'
-    SAVE_DIR = CWD + '/../data/{}/'.format(USER_BUCKET)
-​
-    if DEBUG:
-        users = ['patricknorton', 'taylorswift']
-    else:
-        users = get_users('../data/{}.txt'.format(USER_BUCKET))
-​
-    # Account for users that have been scraped in previous iteration
-    raw_pages = set( os.listdir('../data/{}/'.format(USER_BUCKET)) + os.listdir('../data/raw/') + os.listdir('../data/travel') )
-​
-    for user in users:
-        # Check if exists
-        if any(user.lower() in s.lower() for s in raw_pages):
-            continue
-​
-        # Set profile, inside for loop because doesn't exist after used
-        profile = webdriver.FirefoxProfile()
-        profile.set_preference("browser.download.folderList", 2)
-        profile.set_preference("browser.download.manager.showWhenStarting", False)
-        profile.set_preference("browser.download.dir", SAVE_DIR)
-​
-        # Load driver to load page
-        driver = webdriver.Firefox(firefox_profile=profile)
-​
-        get_page(user, driver, sleeptime=SLEEPTIME)
-​
-        # Write log when done
-        with open('../logs/log_scrape_users.txt', 'ab') as f:
-            f.write('{} saved page for {}\n'.format(time.strftime('%Y%m%d.%H:%M:%s'), user))
-​
-        # Page is not available/404
-        if 'The link you followed may be broken, or the page may have been removed.' in driver.page_source:
-            driver.close()
-            continue
-​
-        # Check if HTML file is saved to conserve memory
-        while not any(user.lower() in s.lower() and 'html' in s.lower() for s in os.listdir(SAVE_DIR)):
-            print '{} Saving {} to {}'.format(time.strftime('%Y%m%d.%H:%M:%s'), user, SAVE_DIR)
-            time.sleep(3)
-​
-        time.sleep(5)
-        driver.close()
-Add Comment
+from selenium.webdriver.support.ui import Select
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoAlertPresentException
+import sys
+
+import unittest, time, re
+
+class Sel(unittest.TestCase):
+    def setUp(self):
+        self.driver = webdriver.Firefox()
+        self.driver.implicitly_wait(30)
+        self.base_url = "https://www.google.com/search?q=winter+melon&espv=2&biw=1541&bih=815&source=lnms&tbm=isch&sa=X&ved=0ahUKEwjK8t3Vp-nLAhXssIMKHXK-CucQ_AUIBigB"
+        self.verificationErrors = []
+        self.accept_next_alert = True
+    def test_sel(self):
+        driver = self.driver
+        delay = 3
+        driver.get(self.base_url )
+        # driver.find_element_by_link_text("Show more results").click()
+        for i in range(1,30):
+            self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+            time.sleep(4)
+        html_source = driver.page_source
+        self.data = html_source.encode('utf-8')
+
+
+if __name__ == "__main__":
+    unittest.main()

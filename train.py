@@ -83,3 +83,5 @@ if __name__ == '__main__':
 
 # 50.5% nesterov_momentum update rate0.002 ,  77.6 top 5 error rate
 # 51.1% add dropout layer  79.29% top 5 error rate
+# 53.26% d_h_d 80.6 top 5
+# 53% dhdhd 81.14%
