@@ -28,6 +28,7 @@ class NN_1(object):
         self.CLASSES = np.array(self.model['synset words'])
         self.MEAN_IMAGE = self.model['mean image']
         self.params = pickle.load(open('good_params.pkl'))
+        self.veg_idx = pickle.load(open('veg_idx.pkl'))
 
     def build(self):
         """
@@ -98,12 +99,14 @@ class NN_1(object):
         return rawim, floatX(im[np.newaxis])
 
 
-    def predict(self, im):
+    def predict(self, im_file):
         """
         Predict outcome of a image
         """
+        _, im = self.preprocess_image(im_file)
         out = np.array(lasagne.layers.get_output(self.output_layer, im, deterministic=True).eval())
-        return out
+        idx = np.argsort(out)[:,::-1][0,:2]
+        return self.veg_idx[idx[0]], self.veg_idx[idx[1]]
 
 
 
