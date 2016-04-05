@@ -10,7 +10,7 @@ from lasagne.layers import MaxPool2DLayer as PoolLayer
 from lasagne.layers import LocalResponseNormalization2DLayer as NormLayer
 from lasagne.utils import floatX
 import sys, os
-
+import time
 
 
 
@@ -103,8 +103,14 @@ class NN_1(object):
         """
         Predict outcome of a image
         """
+        t1 = time.time()
         _, im = self.preprocess_image(im_file)
+        t2 = time.time()
         out = np.array(lasagne.layers.get_output(self.output_layer, im, deterministic=True).eval())
+        t3 = time.time()
+        print '==========================='
+        print 'prediction time:', t3-t2
+        print '==========================='
         idx = np.argsort(out)[:,::-1][0,:2]
         return self.veg_idx[idx[0]], self.veg_idx[idx[1]]
 
