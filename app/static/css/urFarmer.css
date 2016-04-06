@@ -49,3 +49,57 @@ p {
 .fa-fw {
     font-size: 40px;
 }
+
+.fa{
+
+    font-size: 30px;
+}
+
+
+
+
+.wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.wrapper .file-upload {
+  height: 100px;
+  width: 100px;
+  border-radius: 50px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 4px solid #FFFFFF;
+  overflow: hidden;
+  background-image: linear-gradient(to bottom, #(56,56,56,0) 50%, #FFFFFF 50%);
+  background-size: 100% 200%;
+  transition: all 1s;
+  color: #FFFFFF;
+  font-size: 100px;
+}
+.wrapper .file-upload input[type='file'] {
+  height: 200px;
+  width: 200px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.wrapper .file-upload:hover {
+  background-position: 0 -100%;
+  color: #E74C3C;
+}
+.recipe-card {
+  background: #fff;
+  margin: 4em auto;
+  width: 90%;
+  max-width: 496px;
+}
+article {
+  padding: 1.25em 1.5em;
+}
