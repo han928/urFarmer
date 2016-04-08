@@ -77,26 +77,23 @@
                 <div class="header-content-inner">
                     <h1>urFarmer</h1>
                     <hr>
-                    <h3>Hmm... I wonder what is this?</h3>
+                    <h3>Hmm... I wonder what this is?</h3>
+
 
 
 
                     <form class="form-group" role="search" action="/recipe" method ='post' enctype="multipart/form-data">
                         <div class="input-group" style="text-align:center;margin:0 auto;">
-                            <!-- <input id="input-4" name=file type="file" multiple class="file-loading"> -->
-                            <input id="input-4" name=file type="file" multiple class="btn btn-default btn-file">
+                            <!-- <input id="input-4" name=file type="file" multiple class="btn btn-default btn-file"> -->
                             <br>
-
-                            <!-- <div class="col-lg-4 col-sm-6 col-12">
-                                <span class=" btn btn-primary btn-file">
-                                    Browse&hellip;
-                                    <input id="input-4" type="file" multiple name=file type="file" multiple class="file-loading">
-                                </span>
-                            </div> -->
-
+                            <div class="wrapper">
+                              <div class="file-upload">
+                                <input type="file" name=file multiple />
+                                <i class="fa fa-arrow-up"></i>
+                              </div>
+                            </div>
 
                             <br>
-                            <p></p>
                                 <button "submit" class="btn btn-primary btn-xl page-scroll">Let's find out</button>
 
                         </div>
@@ -110,6 +107,7 @@
 
     <section class="bg-primary" id="recipe">
         <div class="container">
+            <!-- <div class = "recipe-card"> -->
             <div class="row">
                     {% if recipe_title %}
                     <div class="col-lg-8 col-lg-offset-2 text-center">
@@ -144,6 +142,7 @@
                     <p class="text-faded"></p>
 
                     {% endif %}
+                <!-- </div> -->
 
             </div>
         </div>

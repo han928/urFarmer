@@ -11,9 +11,9 @@ import pandas as pd
 import numpy as np
 
 # Without GPU
-from lasagne.layers import Conv2DLayer as ConvLayer
+# from lasagne.layers import Conv2DLayer as ConvLayer
 # With GPU
-# from lasagne.layers.dnn import Conv2DDNNLayer as ConvLayer
+from lasagne.layers.dnn import Conv2DDNNLayer as ConvLayer
 
 
 def nn_set():
@@ -36,8 +36,6 @@ def nn_set():
                         ('drop1', DropoutLayer),
                         ('fc2', DenseLayer),
                         ('drop2', DropoutLayer),
-                        ('fc3', DenseLayer),
-                        ('drop3', DropoutLayer),
                         ('output', DenseLayer)
                ],
 
@@ -106,13 +104,13 @@ def nn_set():
 
                # DropoutLayer2
                drop2_p = 0.5,
-
-               # fc3
-               fc3_num_units=4096,
-               fc3_nonlinearity=rectify,
-
-               # DropoutLayer3
-               drop3_p = 0.5,
+               #
+            #    # fc3
+            #    fc3_num_units=4096,
+            #    fc3_nonlinearity=rectify,
+               #
+            #    # DropoutLayer3
+            #    drop3_p = 0.5,
 
                # Output Layer
                output_num_units=130,

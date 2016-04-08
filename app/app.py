@@ -2,7 +2,7 @@ from scrape_food2fork import food2fork_api, food2fork_recipe
 from flask import Flask, request, render_template
 from werkzeug import secure_filename
 import cPickle as pickle
-from nn import NN
+from dhdhd import NN_1
 import os
 
 
@@ -12,7 +12,7 @@ ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-nn = NN()
+nn = NN_1()
 nn.build()
 
 def allowed_file(filename):
@@ -42,9 +42,9 @@ def recipe():
 
     image_path = UPLOAD_FOLDER+filename
 
-    _, im = nn.preprocess_image(image_path)
+    # _, im = nn.preprocess_image(image_path)
 
-    veg = nn.predict(im)
+    veg = nn.predict(image_path)
     print "\n"+ veg[0] + "\n"
     recipe_list = food2fork_api(veg[0].split(',')[0])
 
