@@ -5,10 +5,14 @@ import cPickle as pickle
 import matplotlib.pyplot as plt
 import skimage.transform
 import os
+from itertools import cycle
 
-mod = pickle.load(open('../vgg_cnn_s.pkl','r'))
+
+
+mod = pickle.load(open('./vgg_cnn_s.pkl','r'))
 MEAN_IMAGE = mod['mean image']
-# LABELS = pickle.load(open('../veg_idx.pkl'))
+LABELS = pickle.load(open('./veg_idx.pkl'))
+HOME = '/mnt/images'
 
 
 def preprocess_image(im_file):
@@ -47,20 +51,39 @@ def preprocess_image(im_file):
     return rawim, floatX(im[np.newaxis])
 
 
-def get_dat():
+def gen_list():
+    """
+    generate a list of generator for each image category
+    """
+    folder_list = os.listdir(HOME)
+    gen_dict={}
+    for folder in folder_list:
+        gen_dict[folder] = img_gen(folder)
 
-    # home = '/mnt/images'
-    home = "/home/han/Documents/Github/urFarmer/images/"
+def img_gen(folder):
+    """
+    create generator for individual folders
+    """
+    f_list = os.listdir('{}/{}'.format(HOME, folder))
+
+    for f in cycle(f_list):
+        yield f
+
+
+def batch_generator(gen_dict, batch_size=10):
+    """
+    iterate through gen_list and get images to fit
+    """
 
     X = []
     y = []
-    folder_list = os.listdir(home)
-    LABELS = {}
 
-    for i, folder in enumerate(folder_list):
-        LABELS[folder] = i
-        for fn in os.listdir('{}/{}'.format(home, folder)):
-            _, im = preprocess_image('{}/{}/{}'.format(home, folder, fn))
+
+    for folder, generator in gen_dict.iteritems():
+        for i in xrange(batch_size):
+            # get batch_size number of images generated from each folder
+            fn = next(generator)
+            _, im = preprocess_image('{}/{}/{}'.format(HOME, folder, fn))
             X.append(im)
             y.append(LABELS[folder])
 
@@ -68,7 +91,14 @@ def get_dat():
     y = np.array(y).astype('int32')
 
 
-    return X, y, LABELS
+    return X, y
+
+
+
+
+
 
 if __name__ == '__main__':
     X, y, LABELS = get_dat()
+    np.save('X.npy', X)
+    np.save('y.npy', y)
