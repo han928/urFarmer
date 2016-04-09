@@ -14,11 +14,10 @@ import matplotlib.pyplot as plt
 import skimage.transform
 import os
 
-
 # Without GPU
-from lasagne.layers import Conv2DLayer as ConvLayer
+# from lasagne.layers import Conv2DLayer as ConvLayer
 # With GPU
-# from lasagne.layers.dnn import Conv2DDNNLayer as ConvLayer
+from lasagne.layers.dnn import Conv2DDNNLayer as ConvLayer
 
 
 mod = pickle.load(open('vgg_cnn_s.pkl','r'))
@@ -58,7 +57,7 @@ def nn_set():
                conv1_filter_size=7,
                conv1_stride=2,
                conv1_flip_filters=False,
-               conv1_w=params[0],
+               conv1_W=params[0],
                conv1_b=params[1],
 
                # norm1
@@ -74,7 +73,7 @@ def nn_set():
                conv2_num_filters=256,
                conv2_filter_size=5,
                conv2_flip_filters=False,
-               conv2_w=params[2],
+               conv2_W=params[2],
                conv2_b=params[3],
 
                # pool2
@@ -87,7 +86,7 @@ def nn_set():
                conv3_filter_size=3,
                conv3_pad=1,
                conv3_flip_filters=False,
-               conv3_w=params[4],
+               conv3_W=params[4],
                conv3_b=params[5],
 
                # conv4
@@ -95,7 +94,7 @@ def nn_set():
                conv4_filter_size=3,
                conv4_pad=1,
                conv4_flip_filters=False,
-               conv4_w=params[6],
+               conv4_W=params[6],
                conv4_b=params[7],
 
 
@@ -104,7 +103,7 @@ def nn_set():
                conv5_filter_size=3,
                conv5_pad=1,
                conv5_flip_filters=False,
-               conv5_w=params[8],
+               conv5_W=params[8],
                conv5_b=params[9],
 
                # pool3
@@ -115,7 +114,7 @@ def nn_set():
                # fc1
                fc1_num_units=4096,
                fc1_nonlinearity=rectify,
-               fc1_w=params[10],
+               fc1_W=params[10],
                fc1_b=params[11],
 
                # DropoutLayer1
@@ -124,7 +123,7 @@ def nn_set():
                # fc2
                fc2_num_units=4096,
                fc2_nonlinearity=rectify,
-               fc2_w=params[12],
+               fc2_W=params[12],
                fc2_b=params[13],
 
                # DropoutLayer2
@@ -148,89 +147,7 @@ def nn_set():
 
 
 
-def preprocess_image(im_file):
-    """
-    preprocess image to 256 for neural network to work
-    """
-    # ways to get image on the web
-    # import io
-    # ext = url.split('.')[-1]
-    # im = plt.imread(io.BytesIO(urllib.urlopen(url).read()), ext)
-
-    im = plt.imread(open(im_file, 'r'))
-
-    # resize to smalled dimension of 256 while preserving aspect ratio
-    h, w, c = im.shape
-
-    if h < w:
-        im = skimage.transform.resize(im, (256, w/h*256), preserve_range=True)
-    else:
-        im = skimage.transform.resize(im, (h/w*256, 256), preserve_range=True)
-
-    h, w, c = im.shape
-
-    # central crop to 224x224
-    im = im[h//2-112:h//2+112, w//2-112:w//2+112]
-
-    rawim = np.copy(im).astype('uint8')
-
-    # Shuffle axes to c01
-    im = np.swapaxes(np.swapaxes(im, 1, 2), 0, 1)
-
-    # Convert to BGR
-    im = im[::-1, :, :]
-
-    im = im - MEAN_IMAGE
-    return rawim, floatX(im[np.newaxis])
-
-
-def generate_feature(folder):
-    # home = '/mnt/images/'
-    home = "/home/han/Documents/Github/urFarmer/images/"
-    try:
-        print "filepath", home+folder
-        file_list = os.listdir(home+folder)
-    except:
-        print "no such file"
-        return ""
-
-    for i, f in enumerate(file_list):
-        fname = home+folder+'/'+f
-        _, im = preprocess_image(fname)
-
-        if i ==0:
-            input_im = im
-        else:
-            input_im = np.r_[input_im, im]
-
-        # save every 300 images to prevent overflow
-        # if i % 300 == 0 and i != 0:
-        #     out = nn.predict(input_im)
-        #
-        #     np.save(folder+str(i)+'.npy', out)
-
-
-    # out = nn.predict(input_im)
-
-
-    # print out
-    np.save(folder + '.npy', input_im)
-
-
-def folder_gen_feature():
-    # home = '/mnt/images/'
-    home = "/home/han/Documents/Github/urFarmer/images/"
-
-
-
-    folder_list = os.listdir(home)
-
-    for folder in folder_list:
-        try:
-            generate_feature(folder)
-        except:
-            print "something wrong with ", folder
 
 
 if __name__ == '__main__':
-    folder_gen_feature()
+    nn = nn_set()

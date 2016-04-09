@@ -11,8 +11,8 @@ from itertools import cycle
 
 mod = pickle.load(open('./vgg_cnn_s.pkl','r'))
 MEAN_IMAGE = mod['mean image']
-LABELS = pickle.load(open('./veg_idx.pkl'))
 HOME = '/mnt/images'
+LABELS = {k: v for v, k in enumerate(os.listdir(HOME))}
 
 
 def preprocess_image(im_file):
@@ -51,14 +51,16 @@ def preprocess_image(im_file):
     return rawim, floatX(im[np.newaxis])
 
 
-def gen_list():
+def gen_dict():
     """
-    generate a list of generator for each image category
+    generate a dictionary of generator for each image category
     """
     folder_list = os.listdir(HOME)
     gen_dict={}
     for folder in folder_list:
         gen_dict[folder] = img_gen(folder)
+
+    return gen_dict
 
 def img_gen(folder):
     """
@@ -83,10 +85,12 @@ def batch_generator(gen_dict, batch_size=10):
         for i in xrange(batch_size):
             # get batch_size number of images generated from each folder
             fn = next(generator)
-            _, im = preprocess_image('{}/{}/{}'.format(HOME, folder, fn))
-            X.append(im)
-            y.append(LABELS[folder])
-
+            try:
+                _, im = preprocess_image('{}/{}/{}'.format(HOME, folder, fn))
+                X.append(im)
+                y.append(LABELS[folder])
+            except:
+                print 'something wrong with', folder, fn
     X = np.concatenate(X)
     y = np.array(y).astype('int32')
 
@@ -99,6 +103,5 @@ def batch_generator(gen_dict, batch_size=10):
 
 
 if __name__ == '__main__':
-    X, y, LABELS = get_dat()
-    np.save('X.npy', X)
-    np.save('y.npy', y)
+    gen_dict = gen_dict()
+    X, y = batch_generator(gen_dict)
