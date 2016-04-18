@@ -125,9 +125,11 @@
                     <img src= {{ image_url }} alt="Mountain View" style="width:304px;height:228px;">
                     </div>
 
-                    <div class="col-lg-4  text-center">
-                    <h4 class="section-heading">Ingredients:</h4>
-                    <p class="text-faded">{{ ingredients }}</p>
+                    <div class="col-lg-4  text-left">
+                    <h3 class="section-heading">Ingredients:</h4>
+                    <!-- <p class="text-faded">{{ ingredients }}</p> -->
+                    {{ ingredients | safe}}
+
                     </div>
 
                     {% else %}
@@ -189,6 +191,8 @@
                         <h3>About Han</h3>
                         <p>I'm a data scientist with passion for telling story from data through machine learning techniques with a backgroudn in physics.</p>
                     </div>
+                    <p> Recipes Powered By <a href='http://food2fork.com/'>Food2Fork.com</a></p>
+
                 </div>
             </div>
         </div>

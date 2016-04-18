@@ -49,7 +49,7 @@ def recipe():
     recipe_list = food2fork_api(veg[0].split(',')[0])
 
     recipe_title, image_url, ingredients = food2fork_recipe(recipe_list)
-
+    print ingredients
     ingredients.replace('\n', '<br>')
     return render_template('index.html',veg=veg[0].split(',')[0], \
     recipe_title = recipe_title, image_url = image_url, ingredients = ingredients\

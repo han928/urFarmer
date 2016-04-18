@@ -2,7 +2,7 @@ import lasagne
 from lasagne import layers
 from lasagne.nonlinearities import  sigmoid, softmax, rectify, tanh, linear
 from lasagne.updates import nesterov_momentum
-from nolearn.lasagne import NeuralNet
+from nolearn.lasagne import NeuralNet, BatchIterator
 from lasagne.layers import InputLayer, DenseLayer, DropoutLayer
 from lasagne.layers import MaxPool2DLayer as PoolLayer
 from lasagne.layers import LocalResponseNormalization2DLayer as NormLayer
@@ -20,9 +20,25 @@ import os
 from lasagne.layers.dnn import Conv2DDNNLayer as ConvLayer
 
 
-mod = pickle.load(open('vgg_cnn_s.pkl','r'))
-params = mod['values']
-MEAN_IMAGE = mod['mean image']
+# mod = pickle.load(open('vgg_cnn_s.pkl','r'))
+# params = mod['values']
+# MEAN_IMAGE = mod['mean image']
+
+class FlipBatchIterator(BatchIterator):
+    def transform(self, Xb, yb):
+        Xb, yb = super(FlipBatchIterator, self).transform(Xb, yb)
+
+        # Flip half of the images in this batch at random:
+        # bs = Xb.shape[0]
+        # indices = np.random.choice(bs, bs / 2, replace=False)
+        # Xb[indices] = Xb[indices, :, :, ::-1]
+        # tmp =  yb[indices].reshape(bs/2,3,224,224)
+        # mirror = tmp[ :,:,:, ::-1]
+        # yb[indices] =  mirror.reshape(bs/2,48*48)
+        return Xb, yb
+
+
+
 def nn_set():
     """
     # Configure the neural network
@@ -57,8 +73,8 @@ def nn_set():
                conv1_filter_size=7,
                conv1_stride=2,
                conv1_flip_filters=False,
-               conv1_W=params[0],
-               conv1_b=params[1],
+            #    conv1_W=params[0],
+            #    conv1_b=params[1],
 
                # norm1
                norm1_alpha=0.0001,
@@ -73,8 +89,8 @@ def nn_set():
                conv2_num_filters=256,
                conv2_filter_size=5,
                conv2_flip_filters=False,
-               conv2_W=params[2],
-               conv2_b=params[3],
+            #    conv2_W=params[2],
+            #    conv2_b=params[3],
 
                # pool2
                pool2_pool_size=2,
@@ -86,16 +102,16 @@ def nn_set():
                conv3_filter_size=3,
                conv3_pad=1,
                conv3_flip_filters=False,
-               conv3_W=params[4],
-               conv3_b=params[5],
+            #    conv3_W=params[4],
+            #    conv3_b=params[5],
 
                # conv4
                conv4_num_filters=512,
                conv4_filter_size=3,
                conv4_pad=1,
                conv4_flip_filters=False,
-               conv4_W=params[6],
-               conv4_b=params[7],
+            #    conv4_W=params[6],
+            #    conv4_b=params[7],
 
 
                # conv5
@@ -103,8 +119,8 @@ def nn_set():
                conv5_filter_size=3,
                conv5_pad=1,
                conv5_flip_filters=False,
-               conv5_W=params[8],
-               conv5_b=params[9],
+            #    conv5_W=params[8],
+            #    conv5_b=params[9],
 
                # pool3
                pool3_pool_size=3,
@@ -114,8 +130,8 @@ def nn_set():
                # fc1
                fc1_num_units=4096,
                fc1_nonlinearity=rectify,
-               fc1_W=params[10],
-               fc1_b=params[11],
+            #    fc1_W=params[10],
+            #    fc1_b=params[11],
 
                # DropoutLayer1
                drop1_p = 0.5,
@@ -123,8 +139,8 @@ def nn_set():
                # fc2
                fc2_num_units=4096,
                fc2_nonlinearity=rectify,
-               fc2_W=params[12],
-               fc2_b=params[13],
+            #    fc2_W=params[12],
+            #    fc2_b=params[13],
 
                # DropoutLayer2
                drop2_p = 0.5,
@@ -139,12 +155,13 @@ def nn_set():
                update_momentum=0.7,
                max_epochs=30,
 
+
+               batch_iterator_train=FlipBatchIterator(batch_size=16),
                # Others
                regression=False,
                verbose=1,
          )
     return nn
-
 
 
 
