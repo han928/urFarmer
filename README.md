@@ -21,3 +21,13 @@ using neural networks. While neural networks on ILSVRC challenges on Image-net h
 ## Data Source:
 1. [imagenet data source](http://image-net.org/): a bunch of labeled, boxed datasets for images (eg. collard greens, brocolli)
 2. [food2fork api](http://food2fork.com/about/api): for getting recipes after recognition
+
+
+
+## Web App:
+
+1. Run install.py by typing "python install.py" in the terminal to download essential files for running the web app
+
+2. Go to [food2fork.com](http://food2fork.com/) to apply for an API key and replace your API key in food2fork_api_key.json files
+
+3. run app.py and it should be working. It your machine does not have a GPU, please import Conv2DLayer Layer and commented out  the import for Conv2DDNNLayer 
