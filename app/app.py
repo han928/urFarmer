@@ -48,9 +48,16 @@ def recipe():
     print "\n"+ veg[0] + "\n"
     recipe_list = food2fork_api(veg[0].split(',')[0])
 
-    recipe_title, image_url, ingredients = food2fork_recipe(recipe_list)
-    print ingredients
-    ingredients.replace('\n', '<br>')
+    if len(recipe_list) != 0:
+        recipe_title, image_url, ingredients = food2fork_recipe(recipe_list)
+        print ingredients
+        ingredients.replace('\n', '<br>')
+
+    else:
+        recipe_title = "Sorry, Can't find recipe"
+        image_url = ""
+        ingredients=""
+
     return render_template('index.html',veg=veg[0].split(',')[0], \
     recipe_title = recipe_title, image_url = image_url, ingredients = ingredients\
      , section = "recipe")
