@@ -2,7 +2,7 @@ from scrape_food2fork import food2fork_api, food2fork_recipe
 from flask import Flask, request, render_template
 from werkzeug import secure_filename
 import cPickle as pickle
-from dhdhd import NN_1
+from nn_classification import NN_1
 import os
 
 
