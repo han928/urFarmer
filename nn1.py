@@ -102,6 +102,10 @@ class NN_1(object):
 
 
 def generate_feature(folder):
+    """
+    transform image to feature using pretrained neural network and save as numpy
+    """
+
     # home = '/mnt/images/'
     home = "/home/han/Documents/Github/urFarmer/images/"
     try:
@@ -135,6 +139,10 @@ def generate_feature(folder):
 
 
 def folder_gen_feature():
+    """
+    helper function to get a folders with images and transfom them to numpy array
+    features
+    """
     # home = '/mnt/images/'
     home = "/home/han/Documents/Github/urFarmer/images/"
 
