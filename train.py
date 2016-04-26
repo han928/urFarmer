@@ -76,7 +76,8 @@ def top_5_error(X_test, y_test):
 if __name__ == '__main__':
     X, y = load()
     nn = nn_set()
-
+    nn.fit()
+    
 # save params get_all_param_values()
 # load param load_param_from
 
