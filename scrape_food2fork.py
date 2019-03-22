@@ -11,7 +11,7 @@ with open('food2fork_api_key.json', 'r') as f:
 
 def food2fork_api(ingredient):
     url = 'http://food2fork.com/api/search?key='+api_key +'&q='+ingredient
-    response = requests.get('http://food2fork.com/api/search?key=0a808e45c8ca52288b17d5e956b54431&q='+ingredient).json()
+    response = requests.get('http://food2fork.com/api/search?key=&q='+ingredient).json()
 
     return response['recipes']
 
